@@ -19,14 +19,24 @@ try {
 const app = express();
 
 
-app.use(cors()); // simple, unrestricted
+
+const corsOptions = {
+  origin: 'https://madras-meals-customer-frontend.vercel.app', // exact origin
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 
 app.use(express.json());
 
 // Test route to confirm server is running
 app.get('/test', (req, res) => {
-  res.json({ message: 'Test route is working' });
+  res.json({ message: 'Test route is working v2' });
 });
 
 // Routes
