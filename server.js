@@ -18,10 +18,19 @@ try {
 
 const app = express();
 
-
+const allowedOrigins = [
+  'https://madras-meals-customer-frontend.vercel.app',
+  'https://madras-meals-admin-frontend.vercel.app',
+];
 
 const corsOptions = {
-  origin: 'https://madras-meals-customer-frontend.vercel.app', // exact origin
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); // allow requests with no origin (e.g., curl)
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -29,7 +38,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.options('*', cors(corsOptions)); // preflight
 
 
 app.use(express.json());
